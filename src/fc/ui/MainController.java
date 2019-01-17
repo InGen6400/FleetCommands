@@ -7,6 +7,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.Enumeration;
@@ -23,12 +24,18 @@ public class MainController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = mainCanvas.getGraphicsContext2D();
-        draw();
+        gc.setFill(Color.BLUE);
+        gc.fillRect(0,0, mainCanvas.getWidth(), mainCanvas.getHeight());
     }
 
     public void redraw(Vector<int[]> energy_v, Hashtable<String, Ship> userTable){
         int x,y;
         Enumeration e;
+        String name;
+
+        gc.setFill(Color.BLUE);
+        gc.fillRect(0,0, mainCanvas.getWidth(), mainCanvas.getHeight());
+        gc.setFont(Font.font(null, 16));
         try {
             for( e = energy_v.elements(); e.hasMoreElements(); ){
                 int[] p = (int [])e.nextElement();
@@ -46,13 +53,54 @@ public class MainController implements Initializable{
         } catch (Exception err) {
             System.out.println("error in paint:" + err);
         }
+
+
+        for( e = userTable.keys(); e.hasMoreElements(); ){
+            name = e.nextElement().toString();
+            Ship ship = (Ship) userTable.get(name);
+            x = ship.x*2;
+            y = ship.y*2;
+
+            gc.setFont(Font.font(null, 20));
+            // 影つきにする（黒で一回描画）
+            // 船を表示します
+            gc.setFill(Color.BLACK);
+            gc.fillOval(x - 19, 532 - y - 19, 40, 40);
+            if (x < 40)     gc.fillOval(532+x-19,532-y-19,40,40);
+            if (x > 532-40) gc.fillOval(-532+x-19,532-y-19,40,40);
+            if (y < 40)     gc.fillOval(x-19,-y-19,40,40);
+            if (y > 532-40) gc.fillOval(x-19,1064-y-19,40,40);
+            // 得点を船の右下に表示します
+            gc.fillText(""+ship.point, x + 21, 532 - y + 19) ;
+            if (x > 532-60) gc.fillText(""+ship.point,-532+x+21, 532-y+19);
+            if (y < 40) gc.fillText(""+ship.point,x+21, -y+19);
+            if (x>532-60&&y<40) gc.fillText(""+ship.point,-532+x+21,-y+19);
+            // 名前を船の右上に表示します
+            gc.fillText(name, x+21, 532-y-19) ;
+            if (x > 532-80) gc.fillText(name, -532+x+21, 532-y-19);
+            if (y > 532-40) gc.fillText(name, x+21, 1064-y-19);
+            if (x>532-80&&y>532-40) gc.fillText(name, -532+x+21, 1064-y-19);
+
+            // 船を表示します
+            gc.setFill(Color.GREENYELLOW);
+            gc.fillOval(x - 20, 532 - y - 20, 40, 40);
+            if (x < 40)     gc.fillOval(532+x-20,532-y-20,40,40);
+            if (x > 532-40) gc.fillOval(-532+x-20,532-y-20,40,40);
+            if (y < 40)     gc.fillOval(x-20,-y-20,40,40);
+            if (y > 532-40) gc.fillOval(x-20,1064-y-20,40,40);
+            // 得点を船の右下に表示します
+            gc.fillText(""+ship.point, x + 20, 532 - y + 20); ;
+            if (x > 532-60) gc.fillText(""+ship.point,-532+x+20, 532-y+20);
+            if (y < 40) gc.fillText(""+ship.point,x+20, -y+20);
+            if (x>532-60&&y<40) gc.fillText(""+ship.point,-532+x+20,-y+20);
+            // 名前を船の右上に表示します
+            gc.fillText(name, x+20, 532-y-20) ;
+            if (x > 532-80) gc.fillText(name, -532+x+20, 532-y-20);
+            if (y > 532-40) gc.fillText(name, x+20, 1064-y-20);
+            if (x>532-80&&y>532-40) gc.fillText(name, -532+x+20, 1064-y-20);
+        }
     }
 
-    private void draw(){
-        gc.setFill(Color.BLUE);
-        gc.setStroke(Color.BLACK);//線を赤に変更
-        gc.fillRect(0,0, mainCanvas.getWidth(), mainCanvas.getHeight());
-    }
     public void setDetailController(DetailController dc){
         detail = dc;
     }
