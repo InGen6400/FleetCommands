@@ -73,7 +73,6 @@ public class FleetCommands{
                 ret = i;
             }
         }
-        System.out.println("\n");
         return ret;
     }
 
