@@ -16,7 +16,7 @@ public class FleetCommands{
 
     enum Dir{RIGHT, DOWN, LEFT, UP, NONE}
     // ロボットの動作タイミングを規定する変数sleeptime
-    private int sleeptime = 510;
+    private int sleeptime = 500;
     // ロボットがlogoutするまでの時間を規定する変数timeTolive
     int timeTolive = 50 ;
 
@@ -37,7 +37,7 @@ public class FleetCommands{
         admiral = new Admiral();
         nextMove[0] = Dir.NONE;
         nextMove[1] = Dir.NONE;
-        login(args[0],args[1]) ;
+        login(args[0], args[1]) ;
 
         mainLoop();
     }
@@ -47,19 +47,18 @@ public class FleetCommands{
             try {
                 Reload();
                 ui.redraw(energy_v, userTable);
-                double[] action_q = admiral.DecideMove(energy_v, userTable, my_x, my_y);
-                int action = getMaxIndex(action_q);
+                Admiral.DecideResult res = admiral.DecideMove(energy_v, userTable, my_x, my_y);
+                int action = getMaxIndex(res.q_values);
+                ui.drawQ(res.q_values, action);
                 nextMove = Action2Move(action);
             } catch (Exception e) {
                 e.printStackTrace();
-                System.exit(1);
             }
 
             try {
                 Thread.sleep(sleeptime);
             } catch (Exception e) {
                 e.printStackTrace();
-                System.exit(1);
             }
         }
     }
@@ -208,7 +207,6 @@ public class FleetCommands{
             }
         }catch (Exception e){
             e.printStackTrace();
-            System.exit(1);
         }
     }
 
@@ -233,7 +231,6 @@ public class FleetCommands{
             out.flush();
         }catch(Exception e){
             e.printStackTrace();
-            System.exit(1);
         }
     }
 }

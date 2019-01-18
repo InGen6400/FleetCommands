@@ -3,6 +3,7 @@ package fc;
 import fc.FleetCommands;
 import fc.ui.DetailController;
 import fc.ui.MainController;
+import fc.ui.ObjListController;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -10,10 +11,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
     public static MainController mainController;
     private static DetailController detailController;
+    private static ObjListController objListController;
     private static String[] args;
 
     @Override
@@ -22,22 +26,66 @@ public class Main extends Application {
         primaryStage.setTitle("げ～むがめん");
         primaryStage.setScene(new Scene(mainLoader.load()));
         primaryStage.setResizable(false);
+        primaryStage.setX(20);
+        primaryStage.setY(20);
         primaryStage.show();
         primaryStage.setWidth(512);
         primaryStage.setHeight(537);
-
-        Stage detailStage = new Stage();
-        detailStage.initOwner(primaryStage);
-        FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("./ui/detail.fxml"));
-        detailController = detailLoader.getController();
-        detailStage.initStyle(StageStyle.UTILITY);
-        detailStage.setTitle("詳細");
-        detailStage.setScene(new Scene(detailLoader.load(), 240, 512));
-        detailStage.show();
-        detailStage.setX(primaryStage.getX() + 520);
-
+        primaryStage.showingProperty().addListener((value, oldValue, newValue) -> {
+            if(!newValue){
+                System.exit(0);
+            }
+        });
         mainController = mainLoader.getController();
+
+        mainLoader = new FXMLLoader(getClass().getResource("./ui/aiMap.fxml"));
+        Stage aiMapStage = new Stage();
+        aiMapStage.setTitle("AI中心マップ");
+        try {
+            aiMapStage.setScene(new Scene(mainLoader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        aiMapStage.setResizable(false);
+        aiMapStage.setY(primaryStage.getY() + 530);
+        aiMapStage.setX(primaryStage.getX());
+        aiMapStage.setWidth(512);
+        aiMapStage.setHeight(512);
+
+        mainLoader = new FXMLLoader(getClass().getResource("./ui/detail.fxml"));
+        Stage detailStage = new Stage();
+        detailStage.setTitle("詳細");
+        try {
+            detailStage.setScene(new Scene(mainLoader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        detailStage.setX(primaryStage.getX() + 520);
+        detailStage.setY(primaryStage.getY() + 25);
+        detailStage.setWidth(240);
+        detailStage.setHeight(512);
+        detailController = mainLoader.getController();
+
+        mainLoader = new FXMLLoader(getClass().getResource("./ui/objList.fxml"));
+        Stage objListStage = new Stage();
+        objListStage.setTitle("オブジェクト詳細");
+        try {
+            objListStage.setScene(new Scene(mainLoader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        objListStage.setX(detailStage.getX() + 250);
+        objListStage.setY(primaryStage.getY() + 25);
+        objListStage.setWidth(400);
+        objListStage.setHeight(400);
+        objListController = mainLoader.getController();
+
         mainController.setDetailController(detailController);
+        mainController.setPrimaryStage(primaryStage);
+        mainController.setAiMapStage(aiMapStage);
+        mainController.setDetailStage(detailStage);
+        mainController.setObjListStage(objListStage);
+        mainController.setObjListController(objListController);
 
         Task<Boolean> task = new Task<Boolean>() {
             @Override
@@ -49,6 +97,8 @@ public class Main extends Application {
         };
 
         Thread t = new Thread(task);
+        ExceptionHandler eHandler = new ExceptionHandler();
+        t.setUncaughtExceptionHandler(eHandler);
         t.setDaemon(true);
         t.start();
     }
@@ -64,5 +114,13 @@ public class Main extends Application {
             });
         }
         launch();
+    }
+
+
+    class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            e.printStackTrace();
+        }
     }
 }

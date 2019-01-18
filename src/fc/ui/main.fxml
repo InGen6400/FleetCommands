@@ -9,7 +9,7 @@
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fc.ui.MainController">
    <children>
-      <MenuBar maxHeight="25.0" maxWidth="512.0" minHeight="25.0" minWidth="512.0" opacity="0.18" prefHeight="25.0" prefWidth="512.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar maxHeight="25.0" maxWidth="512.0" minHeight="25.0" minWidth="512.0" prefHeight="25.0" prefWidth="512.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="ファイル">
             <items>
@@ -20,9 +20,9 @@
           </Menu>
           <Menu mnemonicParsing="false" text="表示">
             <items>
-                  <CheckMenuItem mnemonicParsing="false" text="AI中心のマップ" />
-                  <CheckMenuItem mnemonicParsing="false" text="オブジェクト一覧" />
-                  <CheckMenuItem mnemonicParsing="false" text="詳細画面" />
+                  <CheckMenuItem fx:id="aiMapCheck" mnemonicParsing="false" text="AI中心のマップ" />
+                  <CheckMenuItem fx:id="objListCheck" mnemonicParsing="false" text="オブジェクト一覧" />
+                  <CheckMenuItem fx:id="detailCheck" mnemonicParsing="false" text="詳細画面" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="ヘルプ">

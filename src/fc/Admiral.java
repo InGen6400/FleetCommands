@@ -43,7 +43,7 @@ public class Admiral {
     }
 
     // 進行方向を決める
-    public double[] DecideMove(Vector<int[]> energy_v, Hashtable<String, Ship> userTable, int dx, int dy) {
+    public DecideResult DecideMove(Vector<int[]> energy_v, Hashtable<String, Ship> userTable, int dx, int dy) {
         Mapping(energy_v, userTable);
 
         INDArray tmpShip = shipMap.dup();
@@ -65,7 +65,7 @@ public class Admiral {
         inputData = inputData.reshape(new int[]{1, (int) inputData.length()});
         INDArray output = model.output(inputData);
         //return Nd4j.argMax(output).getInt(0);
-        return output.toDoubleVector();
+        return new DecideResult(shipMap.toIntMatrix(), tankMap.toIntMatrix(), output.toDoubleVector());
     }
 
     // タンク・船リストから各2Dマップを作成する
@@ -106,6 +106,17 @@ public class Admiral {
                 }
                 pooledTankMap.putScalar(new int[]{y/tankPool, x/tankPool}, sum);
             }
+        }
+    }
+
+    public class DecideResult{
+        int[][] shiftedShip;
+        int[][] shiftedTank;
+        double[] q_values;
+        public DecideResult(int[][] ship, int[][] tank, double[] q){
+            shiftedShip = ship;
+            shiftedTank = tank;
+            q_values = q;
         }
     }
 }

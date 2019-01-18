@@ -2,13 +2,19 @@ package fc.ui;
 
 import fc.Ship;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -18,20 +24,74 @@ import java.util.Vector;
 public class MainController implements Initializable{
     @FXML private AnchorPane anchorPane;
     @FXML private Canvas mainCanvas;
+
+    @FXML private CheckMenuItem aiMapCheck;
+    @FXML private CheckMenuItem objListCheck;
+    @FXML private CheckMenuItem detailCheck;
+
+    private Stage objListStage;
+    private Stage detailStage;
+    private Stage aiMapStage;
+    private Stage primaryStage;
+
     private GraphicsContext gc;
     private DetailController detail;
+    private ObjListController objListController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = mainCanvas.getGraphicsContext2D();
         gc.setFill(Color.BLUE);
         gc.fillRect(0,0, mainCanvas.getWidth(), mainCanvas.getHeight());
+
+        aiMapCheck.selectedProperty().addListener((value, oldValue, newValue) -> {
+            if(!oldValue && newValue){
+                aiMapStage.showingProperty().addListener((observable, oldShow, newShow) -> {
+                    if (oldShow && !newShow) {
+                        aiMapCheck.setSelected(false);
+                    }
+                });
+                aiMapStage.show();
+            }else if(!newValue){
+                aiMapStage.hide();
+            }
+        });
+
+        detailCheck.selectedProperty().addListener((value, oldValue, newValue) -> {
+            if(!oldValue && newValue){
+                detailStage.showingProperty().addListener((observable, oldShow, newShow) -> {
+                    if (oldShow && !newShow) {
+                        detailCheck.setSelected(false);
+                    }
+                });
+                detailStage.show();
+            }else if(!newValue){
+                detailStage.hide();
+            }
+        });
+
+        objListCheck.selectedProperty().addListener((value, oldValue, newValue) -> {
+            if(!oldValue && newValue){
+                objListStage.showingProperty().addListener((observable, oldShow, newShow) -> {
+                    if (oldShow && !newShow) {
+                        objListCheck.setSelected(false);
+                    }
+                });
+                objListStage.show();
+            }else if(!newValue){
+                objListStage.hide();
+            }
+        });
     }
 
     public void redraw(Vector<int[]> energy_v, Hashtable<String, Ship> userTable){
         int x,y;
         Enumeration e;
         String name;
+
+        if(objListStage.isShowing()) {
+            objListController.UpdateList(energy_v, userTable);
+        }
 
         gc.setFill(Color.BLUE);
         gc.fillRect(0,0, mainCanvas.getWidth(), mainCanvas.getHeight());
@@ -101,7 +161,31 @@ public class MainController implements Initializable{
         }
     }
 
+    public void drawQ(double[] q_values, int action){
+        detail.reQ(q_values, action);
+    }
+
     public void setDetailController(DetailController dc){
         detail = dc;
+    }
+
+    public void setObjListController(ObjListController c){
+        objListController = c;
+    }
+
+    public void setPrimaryStage(Stage primary){
+        primaryStage = primary;
+    }
+
+    public void setAiMapStage(Stage ai){
+        aiMapStage = ai;
+    }
+
+    public void setDetailStage(Stage s){
+        detailStage = s;
+    }
+
+    public void setObjListStage(Stage s){
+        objListStage = s;
     }
 }
