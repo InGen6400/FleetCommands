@@ -3,12 +3,15 @@ package fc;
 import fc.ui.MainController;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
+import static java.lang.Thread.sleep;
 
 public class FleetCommands{
 
@@ -29,38 +32,44 @@ public class FleetCommands{
     private static Hashtable<String, Ship> userTable = null;
     private Admiral admiral;
 
+    private boolean isAlive = true;
 
-    public void Start(String[] args){
+    public int Start(){
         ui = Main.mainController;
         userTable = new Hashtable<>();
         energy_v = new Vector<>();
         admiral = new Admiral();
         nextMove[0] = Dir.NONE;
         nextMove[1] = Dir.NONE;
-        login(args[0], args[1]) ;
 
-        mainLoop();
+        return mainLoop();
     }
 
-    private void mainLoop(){
-        while(true) {
+    private int mainLoop(){
+        while(isAlive) {
             try {
-                Reload();
+                int state = Reload();
+                if(state != 0){
+                    return state;
+                }
                 ui.redraw(energy_v, userTable);
                 Admiral.DecideResult res = admiral.DecideMove(energy_v, userTable, my_x, my_y);
                 int action = getMaxIndex(res.q_values);
                 ui.drawQ(res.q_values, action);
                 nextMove = Action2Move(action);
-            } catch (Exception e) {
+            }catch (Exception e) {
                 e.printStackTrace();
+                return -1;
             }
 
             try {
-                Thread.sleep(sleeptime);
+                sleep(sleeptime);
             } catch (Exception e) {
                 e.printStackTrace();
+                return -1;
             }
         }
+        return 0;
     }
 
     private int getMaxIndex(double[] doubles){
@@ -73,6 +82,10 @@ public class FleetCommands{
             }
         }
         return ret;
+    }
+
+    public String getName(){
+        return name;
     }
 
     private Dir[] Action2Move(int action){
@@ -132,7 +145,7 @@ public class FleetCommands{
         }
     }
 
-    private void Reload(){
+    private int Reload(){
 
         Move(nextMove[0]);
         Move(nextMove[1]);
@@ -205,9 +218,13 @@ public class FleetCommands{
                 // 次の１行を読み取ります
                 line = in.readLine();
             }
+        }catch (IOException e){
+            return 1;
         }catch (Exception e){
             e.printStackTrace();
+            return -1;
         }
+        return 0;
     }
 
     // login関連のオブジェクト
@@ -217,7 +234,7 @@ public class FleetCommands{
     PrintWriter out;// 出力ストリーム
     // loginメソッド
     // サーバへのlogin処理を行います
-    private void login(String host, String name){
+    public boolean login(String host, String name){
         try {
             // サーバとの接続
             this.name = name;
@@ -229,8 +246,11 @@ public class FleetCommands{
             // loginコマンドの送付
             out.println("login " + name);
             out.flush();
+            sleep(10);
+            out.write("");
         }catch(Exception e){
-            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 }

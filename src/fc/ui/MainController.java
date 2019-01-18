@@ -1,6 +1,8 @@
 package fc.ui;
 
+import fc.FleetCommands;
 import fc.Ship;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,14 +31,23 @@ public class MainController implements Initializable{
     @FXML private CheckMenuItem objListCheck;
     @FXML private CheckMenuItem detailCheck;
 
+    private GraphicsContext gc;
+
     private Stage objListStage;
     private Stage detailStage;
     private Stage aiMapStage;
     private Stage primaryStage;
+    private Stage loginStage;
 
-    private GraphicsContext gc;
     private DetailController detail;
     private ObjListController objListController;
+    private AiMapController aiMapController;
+    private LoginController loginController;
+
+    private Thread aiThread = null;
+    private Task<Integer> aiTask;
+
+    private FleetCommands fc;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,6 +95,68 @@ public class MainController implements Initializable{
         });
     }
 
+    public void Start(String ip, String name) {
+        fc = new FleetCommands();
+        if (aiThread==null || !aiThread.isAlive()) {
+            if (fc.login(ip, name)) {
+                loginController.OnLoginSuccess();
+                Toast.makeText(primaryStage, "ログインしました", 2000, 500, 500);
+                aiTask = new Task<Integer>() {
+                    @Override
+                    protected Integer call() throws Exception {
+                        return fc.Start();
+                    }
+                };
+                aiTask.setOnFailed(wse -> OnFCFailed(aiTask.getValue()));
+                aiTask.setOnSucceeded(wse -> OnFCSuccess(aiTask.getValue()));
+                aiThread = new Thread(aiTask);
+                aiThread.setDaemon(true);
+                aiThread.start();
+                loginStage.hide();
+            }else{
+                System.out.println("Login Failed");
+                loginController.OnLoginFailed();
+            }
+        }else{
+            loginController.Already();
+        }
+    }
+
+    public void ShowLoginWindow(){
+        loginStage.show();
+    }
+
+    public void Logout(){
+        if(aiTask != null && aiTask.isRunning()) {
+            aiTask.cancel();
+            Toast.makeText(primaryStage, "ログアウトしました", 2000, 500, 500);
+        }else{
+            Toast.makeText(primaryStage, "ログアウト済みです", 2000, 500, 500);
+        }
+    }
+
+    private void OnFCFailed(int state){
+        System.out.println("AI エラー終了");
+    }
+
+    private void OnFCSuccess(int state){
+        switch (state){
+            case -1:
+                Toast.makeText(primaryStage, "AI エラー終了", 2000, 500, 500);
+                break;
+            case 1:
+                Toast.makeText(primaryStage, "接続が切れました", 2000, 500, 500);
+        }
+    }
+
+    public void OnLoginCanceled(){
+        loginStage.hide();
+    }
+
+    public void Exit(){
+        System.exit(0);
+    }
+
     public void redraw(Vector<int[]> energy_v, Hashtable<String, Ship> userTable){
         int x,y;
         Enumeration e;
@@ -93,7 +166,11 @@ public class MainController implements Initializable{
             objListController.UpdateList(energy_v, userTable);
         }
 
-        gc.setFill(Color.BLUE);
+        if(aiMapStage.isShowing()){
+            aiMapController.redraw(energy_v, userTable, fc.getName());
+        }
+
+        gc.setFill(Color.LIGHTSKYBLUE);
         gc.fillRect(0,0, mainCanvas.getWidth(), mainCanvas.getHeight());
         gc.setFont(Font.font(null, 16));
         try {
@@ -113,7 +190,6 @@ public class MainController implements Initializable{
         } catch (Exception err) {
             System.out.println("error in paint:" + err);
         }
-
 
         for( e = userTable.keys(); e.hasMoreElements(); ){
             name = e.nextElement().toString();
@@ -168,24 +244,29 @@ public class MainController implements Initializable{
     public void setDetailController(DetailController dc){
         detail = dc;
     }
-
     public void setObjListController(ObjListController c){
         objListController = c;
+    }
+    public void setLoginController(LoginController c){
+        loginController = c;
+    }
+    public void setAiMapController(AiMapController c){
+        aiMapController = c;
     }
 
     public void setPrimaryStage(Stage primary){
         primaryStage = primary;
     }
-
     public void setAiMapStage(Stage ai){
         aiMapStage = ai;
     }
-
     public void setDetailStage(Stage s){
         detailStage = s;
     }
-
     public void setObjListStage(Stage s){
         objListStage = s;
+    }
+    public void setLoginStage(Stage s){
+        loginStage = s;
     }
 }

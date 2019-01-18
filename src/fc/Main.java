@@ -1,9 +1,7 @@
 package fc;
 
 import fc.FleetCommands;
-import fc.ui.DetailController;
-import fc.ui.MainController;
-import fc.ui.ObjListController;
+import fc.ui.*;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +16,7 @@ public class Main extends Application {
     public static MainController mainController;
     private static DetailController detailController;
     private static ObjListController objListController;
+    private static LoginController loginController;
     private static String[] args;
 
     @Override
@@ -51,6 +50,7 @@ public class Main extends Application {
         aiMapStage.setX(primaryStage.getX());
         aiMapStage.setWidth(512);
         aiMapStage.setHeight(512);
+        AiMapController aiMapController = mainLoader.getController();
 
         mainLoader = new FXMLLoader(getClass().getResource("./ui/detail.fxml"));
         Stage detailStage = new Stage();
@@ -80,27 +80,32 @@ public class Main extends Application {
         objListStage.setHeight(400);
         objListController = mainLoader.getController();
 
+        mainLoader = new FXMLLoader(getClass().getResource("./ui/login.fxml"));
+        Stage loginStage = new Stage();
+        loginStage.setTitle("ログイン");
+        try {
+            loginStage.setScene(new Scene(mainLoader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        loginStage.setX(primaryStage.getX() + 100);
+        loginStage.setY(primaryStage.getY() + 70);
+        loginStage.setWidth(350);
+        loginStage.setHeight(250);
+        loginController = mainLoader.getController();
+        loginController.setMC(mainController);
+
         mainController.setDetailController(detailController);
+        mainController.setObjListController(objListController);
+        mainController.setLoginController(loginController);
+        mainController.setAiMapController(aiMapController);
+
         mainController.setPrimaryStage(primaryStage);
         mainController.setAiMapStage(aiMapStage);
         mainController.setDetailStage(detailStage);
         mainController.setObjListStage(objListStage);
-        mainController.setObjListController(objListController);
-
-        Task<Boolean> task = new Task<Boolean>() {
-            @Override
-            protected Boolean call() throws Exception {
-                FleetCommands fc = new FleetCommands();
-                fc.Start(args);
-                return true;
-            }
-        };
-
-        Thread t = new Thread(task);
-        ExceptionHandler eHandler = new ExceptionHandler();
-        t.setUncaughtExceptionHandler(eHandler);
-        t.setDaemon(true);
-        t.start();
+        mainController.setLoginStage(loginStage);
+        mainController.setAiMapStage(aiMapStage);
     }
 
     public static void main(String[] command_args) {
