@@ -14,4 +14,10 @@ public class Ship {
         this.y = y;
         this.point = point;
     }
+
+    public Ship(Ship ship){
+        this.x = ship.x;
+        this.y = ship.y;
+        this.point = ship.point;
+    }
 }

@@ -30,12 +30,13 @@ public class LoginController {
     }
 
     public void OnLoginFailed(){
-        msgText.setText("ログインに失敗しました\n　" + failMessage[Math.min(failCount, failMessage.length-1)]);
+        msgText.setText("ログインに失敗しました:\n　" + failMessage[Math.min(failCount, failMessage.length-1)]);
         failCount++;
     }
     public void OnLoginSuccess(){
         failCount = 0;
     }
+
     public void Already(){
         msgText.setText("AIが活動中です．切断するにはログオフしてください");
     }
@@ -45,12 +46,15 @@ public class LoginController {
     private String[] failMessage = new String[]{
             "サーバーのIPアドレスを間違えていませんか？",
             "ネットにはつながっていますか？",
-            "同じ名前ですでにログインされていないですか？",
+            "同じ名前で既にログインされていないですか？",
+            "ほんとにそのサーバー動いてます？",
             "タイプミス・・・ではないですよね．",
             "まだログインできないんですか？",
             "粘りますね．．．",
             "そろそろ諦めてよいのでは？",
             "そろっとしゃべることがなくなってきました．．．",
-            "...............ﾊﾞｲﾊﾞｲ(´･ω･`)ﾉｼ"
+            "...............ﾊﾞｲﾊﾞｲ(´･ω･`)ﾉｼ",
+            "(つ∀-)ｵﾔｽﾐｰ",
+            "( ˘ω˘)zzz"
     };
 }

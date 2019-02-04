@@ -21,12 +21,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("./ui/main.fxml"));
         primaryStage.setTitle("げ～むがめん");
         primaryStage.setScene(new Scene(mainLoader.load()));
         primaryStage.setResizable(false);
-        primaryStage.setX(20);
-        primaryStage.setY(20);
+        primaryStage.setX(10);
+        primaryStage.setY(10);
         primaryStage.show();
         primaryStage.setWidth(512);
         primaryStage.setHeight(537);
@@ -46,7 +47,7 @@ public class Main extends Application {
             e.printStackTrace();
         }
         aiMapStage.setResizable(false);
-        aiMapStage.setY(primaryStage.getY() + 530);
+        aiMapStage.setY(primaryStage.getY() + 535);
         aiMapStage.setX(primaryStage.getX());
         aiMapStage.setWidth(512);
         aiMapStage.setHeight(512);
@@ -60,8 +61,8 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        detailStage.setX(primaryStage.getX() + 520);
-        detailStage.setY(primaryStage.getY() + 25);
+        detailStage.setX(primaryStage.getX() + 510);
+        detailStage.setY(primaryStage.getY());
         detailStage.setWidth(240);
         detailStage.setHeight(512);
         detailController = mainLoader.getController();
@@ -74,8 +75,8 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        objListStage.setX(detailStage.getX() + 250);
-        objListStage.setY(primaryStage.getY() + 25);
+        objListStage.setX(detailStage.getX() + 230);
+        objListStage.setY(primaryStage.getY());
         objListStage.setWidth(400);
         objListStage.setHeight(400);
         objListController = mainLoader.getController();
@@ -92,6 +93,8 @@ public class Main extends Application {
         loginStage.setY(primaryStage.getY() + 70);
         loginStage.setWidth(350);
         loginStage.setHeight(250);
+        loginStage.setAlwaysOnTop(true);
+
         loginController = mainLoader.getController();
         loginController.setMC(mainController);
 
