@@ -19,8 +19,8 @@ import java.net.URL;
 import java.util.*;
 
 public class ObjListController implements Initializable {
-    @FXML ListView tankList;
-    @FXML ListView shipList;
+    @FXML ListView<String> tankList;
+    @FXML ListView<String> shipList;
     @FXML Label tankLabel;
     @FXML Label shipLabel;
 

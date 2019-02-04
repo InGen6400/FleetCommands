@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 
 public class DetailController implements Initializable {
     @FXML Label qLabel;
-    @FXML ListView qList;
+    @FXML ListView<Double> qList;
 
     private ObservableList<Double> QItems;
     private double q_sum;
