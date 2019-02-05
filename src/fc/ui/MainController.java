@@ -2,6 +2,7 @@ package fc.ui;
 
 import fc.FleetCommands;
 import fc.Ship;
+import fc.Admiral;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,8 +57,11 @@ public class MainController implements Initializable{
     private Ship[] prevShip;
     private int prevNum = 3;
 
+    private Admiral admiral;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        fc = new FleetCommands();
         prevShip = new Ship[prevNum];
         gc = mainCanvas.getGraphicsContext2D();
         gc.setFill(Color.LIGHTSKYBLUE);
@@ -104,8 +108,8 @@ public class MainController implements Initializable{
     }
 
     public void Start(String ip, String name) {
-        fc = new FleetCommands();
         if (aiThread==null || !aiThread.isAlive()) {
+            admiral = new  Admiral(null);
             if (fc.login(ip, name)) {
                 loginController.OnLoginSuccess();
                 myName = name;
@@ -115,7 +119,7 @@ public class MainController implements Initializable{
                 aiTask = new Task<Integer>() {
                     @Override
                     protected Integer call() throws Exception {
-                        return fc.Start();
+                        return fc.Start(admiral);
                     }
                 };
                 aiTask.setOnFailed(wse -> OnFCFailed(aiTask.getValue()));

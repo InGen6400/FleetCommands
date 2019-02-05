@@ -23,7 +23,7 @@ public class FleetCommands{
     // ロボットがlogoutするまでの時間を規定する変数timeTolive
     int timeTolive = 50 ;
 
-    private String name;
+    private String name = "No Init";
     // 次の更新時の移動
     private Dir[] nextMove = new Dir[2];
     private int my_x, my_y;
@@ -34,13 +34,17 @@ public class FleetCommands{
 
     private boolean isAlive = true;
 
-    public int Start(){
+    void FleetCommands(){
+      System.out.println("FleetCommands init");
+    }
+
+    public int Start(Admiral in_admiral){
         ui = Main.mainController;
         userTable = new Hashtable<>();
         energy_v = new Vector<>();
-        admiral = new Admiral();
         nextMove[0] = Dir.NONE;
         nextMove[1] = Dir.NONE;
+        admiral = in_admiral;
 
         return mainLoop();
     }

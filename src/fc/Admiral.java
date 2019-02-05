@@ -17,19 +17,21 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 public class Admiral {
-    private int shipPool=4, tankPool=16;
+    private int shipPool=4, tankPool=4;
     private MultiLayerNetwork model;
     private INDArray shipMap;
     private INDArray tankMap;
     private INDArray pooledShipMap;
     private INDArray pooledTankMap;
 
-    public Admiral(){
+    public Admiral(String model_file){
         // モデル読み込み
         try {
-            String simpleMlp = new ClassPathResource("model.h5").getFile().getPath();
-            System.out.println(simpleMlp);
-            model = KerasModelImport.importKerasSequentialModelAndWeights(simpleMlp);
+            if(model_file == null) {
+                model_file = new ClassPathResource("model.h5").getFile().getPath();
+            }
+            System.out.println(model_file);
+            model = KerasModelImport.importKerasSequentialModelAndWeights(model_file);
         } catch (UnsupportedKerasConfigurationException | IOException | InvalidKerasConfigurationException e) {
             e.printStackTrace();
         }
