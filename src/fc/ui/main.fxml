@@ -17,6 +17,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#ShowLoginWindow" text="ログイン" />
                   <MenuItem mnemonicParsing="false" onAction="#Logout" text="ログアウト" />
+                  <MenuItem mnemonicParsing="false" onAction="#SelectModel" text="モデルファイル選択" />
                   <MenuItem mnemonicParsing="false" onAction="#Exit" text="終了" />
             </items>
           </Menu>

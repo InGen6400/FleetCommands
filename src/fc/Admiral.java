@@ -12,6 +12,7 @@ import org.nd4j.linalg.cpu.nativecpu.NDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.io.ClassPathResource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -24,14 +25,14 @@ public class Admiral {
     private INDArray pooledShipMap;
     private INDArray pooledTankMap;
 
-    public Admiral(String model_file){
+    public Admiral(File model_file){
         // モデル読み込み
         try {
             if(model_file == null) {
-                model_file = new ClassPathResource("model.h5").getFile().getPath();
+                model_file = new ClassPathResource("model.h5").getFile();
             }
             System.out.println(model_file);
-            model = KerasModelImport.importKerasSequentialModelAndWeights(model_file);
+            model = KerasModelImport.importKerasSequentialModelAndWeights(model_file.getPath());
         } catch (UnsupportedKerasConfigurationException | IOException | InvalidKerasConfigurationException e) {
             e.printStackTrace();
         }

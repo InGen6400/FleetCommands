@@ -15,9 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -58,6 +60,7 @@ public class MainController implements Initializable{
     private int prevNum = 3;
 
     private Admiral admiral;
+    private File model_file = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -109,7 +112,7 @@ public class MainController implements Initializable{
 
     public void Start(String ip, String name) {
         if (aiThread==null || !aiThread.isAlive()) {
-            admiral = new  Admiral(null);
+            admiral = new Admiral(model_file);
             if (fc.login(ip, name)) {
                 loginController.OnLoginSuccess();
                 myName = name;
@@ -149,6 +152,14 @@ public class MainController implements Initializable{
         }else{
             Toast.makeText(primaryStage, "ログアウト済みです", 2000, 500, 500);
         }
+    }
+
+    public void SelectModel(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle( "ファイル選択" );
+        fileChooser.setInitialDirectory( new File("./") );
+        fileChooser.getExtensionFilters().add( new FileChooser.ExtensionFilter( "modelファイル", "*.h5, *.hdf5" ) );
+        model_file = fileChooser.showOpenDialog(primaryStage);
     }
 
     private void OnFCFailed(int state){
