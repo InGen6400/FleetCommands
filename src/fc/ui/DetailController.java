@@ -91,19 +91,12 @@ public class DetailController implements Initializable {
     private static String[] Dir2Str = new String[]{
             "右 -> 右",
             "右 -> 下",
-            "右 -> 左",
             "右 -> 上",
-            "下 -> 右",
             "下 -> 下",
             "下 -> 左",
-            "下 -> 上",
-            "左 -> 右",
-            "左 -> 下",
             "左 -> 左",
             "左 -> 上",
-            "上 -> 右",
-            "上 -> 下",
-            "上 -> 左",
             "上 -> 上",
+            "無 -> 無"
     };
 }

@@ -24,12 +24,13 @@ public class Admiral {
     private INDArray tankMap;
     private INDArray pooledShipMap;
     private INDArray pooledTankMap;
+    private String defModel = "model2.h5";
 
     public Admiral(File model_file){
         // モデル読み込み
         try {
             if(model_file == null) {
-                model_file = new ClassPathResource("model.h5").getFile();
+                model_file = new ClassPathResource(defModel).getFile();
             }
             System.out.println(model_file);
             model = KerasModelImport.importKerasSequentialModelAndWeights(model_file.getPath());

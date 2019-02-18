@@ -108,33 +108,19 @@ public class FleetCommands{
             case 1:
                 return new Dir[]{Dir.RIGHT, Dir.DOWN};
             case 2:
-                return new Dir[]{Dir.RIGHT, Dir.LEFT};
-            case 3:
                 return new Dir[]{Dir.RIGHT, Dir.UP};
-            case 4:
-                return new Dir[]{Dir.DOWN, Dir.RIGHT};
-            case 5:
+            case 3:
                 return new Dir[]{Dir.DOWN, Dir.DOWN};
-            case 6:
+            case 4:
                 return new Dir[]{Dir.DOWN, Dir.LEFT};
-            case 7:
-                return new Dir[]{Dir.DOWN, Dir.UP};
-            case 8:
-                return new Dir[]{Dir.LEFT, Dir.RIGHT};
-            case 9:
-                return new Dir[]{Dir.LEFT, Dir.DOWN};
-            case 10:
+            case 5:
                 return new Dir[]{Dir.LEFT, Dir.LEFT};
-            case 11:
+            case 6:
                 return new Dir[]{Dir.LEFT, Dir.UP};
-            case 12:
-                return new Dir[]{Dir.UP, Dir.RIGHT};
-            case 13:
-                return new Dir[]{Dir.UP, Dir.DOWN};
-            case 14:
-                return new Dir[]{Dir.UP, Dir.LEFT};
-            case 15:
+            case 7:
                 return new Dir[]{Dir.UP, Dir.UP};
+            case 8:
+                return new Dir[]{Dir.NONE, Dir.NONE};
             default:
                 System.out.println("Error: 不正なaction: " + action);
                 return null;
