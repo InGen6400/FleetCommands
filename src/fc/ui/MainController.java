@@ -158,7 +158,7 @@ public class MainController implements Initializable{
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle( "ファイル選択" );
         fileChooser.setInitialDirectory( new File("./") );
-        fileChooser.getExtensionFilters().add( new FileChooser.ExtensionFilter( "modelファイル", "*.h5, *.hdf5" ) );
+        fileChooser.getExtensionFilters().add( new FileChooser.ExtensionFilter( "modelファイル", "*.h5" ) );
         model_file = fileChooser.showOpenDialog(primaryStage);
     }
 
@@ -329,7 +329,7 @@ public class MainController implements Initializable{
     }
     public void setDetailStage(Stage s) {
         detailStage = s;
-        detail.reQ(new double[]{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1}, 0);
+        detail.reQ(new double[]{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1}, 0);
         detailCheck.setSelected(true);
     }
     public void setObjListStage(Stage s){

@@ -97,6 +97,6 @@ public class DetailController implements Initializable {
             "左 -> 左",
             "左 -> 上",
             "上 -> 上",
-            "無 -> 無"
+            "無 -> 無",
     };
 }
